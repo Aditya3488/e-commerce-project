@@ -1,24 +1,59 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import Register from "./components/Register";
+import Login from "./components/Login";
+import ProductList from "./pages/ProductList";
+import Home from "./pages/Home";
+import ScrollHandler from "./ScrollHandler";
+import "./App.css";
 
 function App() {
+  const authToken = localStorage.getItem("authToken");
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <ScrollHandler>
+        <div className="app-container">
+          <img
+            src="/image/bg-img.jpg"
+            alt="Background"
+            className="background-image"
+          />
+          <nav>
+            <ul>
+              <li>
+                <Link to="/">Home</Link>
+              </li>
+              {!authToken && (
+                <>
+                  <li>
+                    <Link to="/register">Register</Link>
+                  </li>
+                  <li>
+                    <Link to="/login">Login</Link>
+                  </li>
+                </>
+              )}
+              {authToken && (
+                <li>
+                  <Link to="/products">Products</Link>
+                </li>
+              )}
+            </ul>
+          </nav>
+          <div className="form-overlay">
+            <Routes>
+              <Route path="/register" element={<Register />} />
+              <Route path="/login" element={<Login />} />
+            </Routes>
+          </div>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/products" element={<ProductList />} />
+          </Routes>
+        </div>
+      </ScrollHandler>
+    </Router>
   );
 }
 
